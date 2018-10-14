@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 class Landing extends Component {
+
   render() {
     const Wrapper = styled.div`
       border-top: 8px #7AACA6 solid;

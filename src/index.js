@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Player from './Player'
 
 import Landing from './Landing';
 import Start from './Start';
@@ -13,6 +14,9 @@ const Root = () => {
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={Landing} />
+                <Route exact path="/player1" render={() => <Player isOne={true} /> }/>
+                <Route exact path="/player2" render={() => <Player isOne={false} />} />
+  
                 <Route exact path="/start" component={Start} />
                 <Route exact path="/waiting" component={Waiting} />
                 <Route exact path="/winner" component={Winner} />
