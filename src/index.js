@@ -4,13 +4,15 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Landing from './Landing';
 import Start from './Start';
+import Waiting from './Waiting';
 
 const Root = () => {
     return (
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={Landing} />
-                <Route exact path="/Start" component={Start} />
+                <Route exact path="/start" component={Start} />
+                <Route exact path="/waiting" component={Waiting} />
             </Switch>
         </BrowserRouter>
     )
