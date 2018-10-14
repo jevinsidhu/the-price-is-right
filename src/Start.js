@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import styled from 'styled-components';
 import Countdown from 'react-countdown-now';
 import { Redirect } from 'react-router-dom';
+import firebase from './firebase.js';
+var database = firebase.database();
+var gameData = database.ref('/')
 
 class Start extends Component {
     constructor(props) {
@@ -22,14 +25,24 @@ class Start extends Component {
                 3: null,
                 4: null,
             },
+            isLoading: true,
+            id: this.props.isOne ? 1 : 2,
+            otherPlayerID: this.props.isOne ? 2 : 1,
+            correct: false
+
         };
         this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
-        // Put actual prices here
-        let prices = [99, 110, 120, 200];
-        let bgToPrice = {
+        gameData.child(`game/player${this.state.id}`).update({
+            active: true
+        })
+
+        gameData.on('value', (snapshot) => {
+            var data = snapshot.val()
+            let prices = [data.game.shoe.price, data.game.shoe.wrongPrices[0], data.game.shoe.wrongPrices[1], data.game.shoe.wrongPrices[2]];
+            let bgToPrice = {
             1: null,
             2: null,
             3: null,
@@ -47,6 +60,21 @@ class Start extends Component {
         }
 
         this.setState({bgToPrice});
+        this.setState({
+            round: data.game.round
+        })
+        this.setState({gameData: data.game})
+        this.setState({isLoading: false})
+        this.setState({answer: data.game.shoe.price})
+
+         })
+
+        //  gameData.on('value', (snapshot) => {
+        //     var data = snapshot.val()
+        //     this.setState({gameData: data.game})
+        //  })
+
+        
     }
 
     handleClick(bgColor, choice) {
@@ -68,6 +96,9 @@ class Start extends Component {
                 else {
                     this.setState({ bgColor4: '#539d37' });
                 }
+
+                    this.setState({correct: true})
+
             }
             else {
                 if (this.state.bg === 1) {
@@ -95,6 +126,7 @@ class Start extends Component {
                 else {
                     this.setState({ bgColor4: '#FF5A5F' });
                 }
+
             }
         }
     }
@@ -102,7 +134,80 @@ class Start extends Component {
     render(){
         const renderer = ({ seconds, completed }) => {
             if (completed) {
-                return <Redirect to='/waiting' />;
+
+
+
+        var otherPlayerID;
+        if(this.state.id === 1) {
+            otherPlayerID = 2
+        } else {
+            otherPlayerID = 1
+
+            if(this.state.gameData.round >= 10)  {
+                gameData.child("game").update({
+                    gameOver: true
+                })
+            }
+
+            gameData.child("game").update({
+                round: this.state.gameData.round + 1
+            })
+
+            fetch('https://shrouded-sea-47046.herokuapp.com/https://gateway.stockx.com/public/v1/browse?limit=200', { 
+                method: 'GET', 
+                headers: new Headers({
+                  'x-api-key': "B1sR9t386d6UVO6aI7KRf91gLaUywqEK1TLBGsXv",
+                  'Content-Type': 'application/json'
+                }), 
+              })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+
+                var shoeNumber = Math.floor(Math.random() * (199 - 0)) + 0
+                var wrongPrices = []
+                for (let index = 0; index < 3; index++) {
+                    console.log(shoeNumber)
+                    var wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (200 - -200)) -200)
+                    while(wrongPrice < 0) {wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (200 - -200)) -200) }
+                    wrongPrices.push(wrongPrice)
+                } 
+                gameData.child(`game/shoe/`).update({
+                        name: data.Products[shoeNumber].title,
+                        price: data.Products[shoeNumber].market.lastSale,
+                        image: data.Products[shoeNumber].media.imageUrl,
+                        wrongPrices: wrongPrices
+                  });
+            });
+        }
+
+        gameData.child(`game/player${this.state.id}/`).update({
+            turn: false
+          });
+
+          gameData.child(`game/player${otherPlayerID}/`).update({
+            turn: true
+          });
+
+          if(this.state.correct) {
+            gameData.child(`game/player${this.state.id}/`).update({
+                score: this.state.gameData[`player${this.state.id}`].score + 1,
+              });
+          }
+
+                var score = this.state.gameData[`player${this.state.id}`].score
+                var friendScore = this.state.gameData[`player${this.state.otherPlayerID}`].score
+                var id = this.state.id
+                var gameDataPass = this.state.gameData
+                return (
+                    <Redirect to={{
+                        pathname: '/waiting',
+                        score: score,
+                        friendScore: friendScore,
+                        id: id,
+                        gameData: gameDataPass
+                    }} />
+                )
             } else {
                 return <Timer>{seconds} <TimerSpan>SECONDS</TimerSpan></Timer>;
             }
@@ -215,6 +320,26 @@ class Start extends Component {
             font-weight: 900;
         `;
 
+        if(this.state.isLoading) {
+            return(<div></div>)
+        }
+
+        if(this.state.gameData[`player${this.state.id}`].turn === false) {
+            var score = this.state.gameData[`player${this.state.id}`].score
+            var friendScore = this.state.gameData[`player${this.state.otherPlayerID}`].score
+            var id = this.state.id
+            var gameDataPass = this.state.gameData
+                return (
+                    <Redirect to={{
+                        pathname: '/waiting',
+                        score: score,
+                        friendScore: friendScore,
+                        id: id,
+                        gameData: gameDataPass
+                    }} />
+                )
+        }
+
         return(
             <Wrapper>
                 <RoundCounter>ROUND {this.state.round} / 10</RoundCounter>
@@ -225,11 +350,11 @@ class Start extends Component {
                 <TitleWrapper>
                     <Subtitle>Title:</Subtitle>
                     {/* Put the actual title here */}
-                    <Title>adidas Yeezy Wave Runner 700 Solid Grey</Title>
+                    <Title>{this.state.gameData.shoe.name}</Title>
                 </TitleWrapper>
                 <ImgWrapper>
                     {/* Put the actual image here */}
-                    <Img alt="yeezy" src="https://stockx-360.imgix.net/Adidas-Yeezy-Wave-Runner-700-Solid-Grey/Images/Adidas-Yeezy-Wave-Runner-700-Solid-Grey/Lv2/img36.jpg?auto=format,compress&w=1117&q=90" />
+                    <Img alt="yeezy" src={this.state.gameData.shoe.image} />
                 </ImgWrapper>
                 <OptionsWrapper>
                     <OptionButtonWrapper style={{ backgroundColor: this.state.bgColor1 }} onClick={() => this.handleClick(1, this.state.bgToPrice['1'])} >

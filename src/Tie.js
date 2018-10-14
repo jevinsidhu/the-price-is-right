@@ -5,7 +5,7 @@ import firebase from './firebase.js';
 var database = firebase.database();
 var gameData = database.ref('/')
 
-class Winner extends Component {
+class Tie extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,11 +13,9 @@ class Winner extends Component {
             score: this.props.location.score,
             friendScore: this.props.location.friendScore,
             id: this.props.location.id
-
         };
 
         this.resetGame =  this.resetGame.bind(this)
-
     }
 
     resetGame = () => {
@@ -71,6 +69,7 @@ class Winner extends Component {
             text-align: center;
             text-decoration: underline;
         `;
+
         var newGame;
 
         if(this.state.id === 1) {
@@ -87,10 +86,11 @@ class Winner extends Component {
             )
         }
 
+        
         return (
             <Wrapper>
-                <Img alt="smile" src="https://i.imgur.com/ONnUNCY.png" />
-                <Header>YOU WON!</Header>
+                <Img alt="crying" src="https://i.imgur.com/bTf4R47.png" />
+                <Header>IT'S A TIE!</Header>
                 <Score>YOUR SCORE IS: {this.state.score}</Score>
                 <Score>YOUR FRIEND'S SCORE IS: {this.state.friendScore}</Score>
                 {newGame}
@@ -99,4 +99,4 @@ class Winner extends Component {
     }
 }
 
-export default Winner;
+export default Tie;

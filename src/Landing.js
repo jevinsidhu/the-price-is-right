@@ -1,8 +1,26 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import firebase from './firebase.js';
+var database = firebase.database();
+var gameData = database.ref('/')
 
 class Landing extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      player1: false,
+      player2: false
+    }
+  }
+
+  componentDidMount = () => {
+    gameData.child("game/").on('value', (snapshot) => {
+       var data = snapshot.val()
+       this.setState({player1: data["player1"].active})
+       this.setState({player2: data["player2"].active})
+    })
+}
 
   render() {
     const Wrapper = styled.div`
@@ -54,6 +72,21 @@ class Landing extends Component {
       width: 300px;
     `;
 
+    var startLink;
+
+    if(!this.state.player1) {
+      startLink = (<Link to="/player1">
+      <LinkedWrapper>PLAY</LinkedWrapper>
+</Link>)
+    } else {
+      startLink = (<Link to="/player2">
+      <LinkedWrapper>PLAY</LinkedWrapper>
+</Link>)
+    }
+
+
+    
+
     return (
       <Wrapper>
         <Img alt="Logo" src="https://i.imgur.com/UC5hkx6.png"/>
@@ -61,9 +94,7 @@ class Landing extends Component {
         <Description>
           A game that pits you against your friend to select the correct bidding price of the top trending sneakers on StockX.
           </Description>
-        <Link to="/start">
-          <LinkedWrapper>PLAY</LinkedWrapper>
-        </Link>
+        {startLink}
       </Wrapper>
     )
   }

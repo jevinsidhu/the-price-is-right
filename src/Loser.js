@@ -1,16 +1,30 @@
 import React, { Component } from "react";
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import firebase from './firebase.js';
+var database = firebase.database();
+var gameData = database.ref('/')
 
 class Loser extends Component {
     constructor(props) {
         super(props);
         this.state = {
             // Put the actual scores here
-            score: 0,
-            friendScore: 0,
+            score: this.props.location.score,
+            friendScore: this.props.location.friendScore,
+            id: this.props.location.id
         };
+
+        this.resetGame =  this.resetGame.bind(this)
+    }
+
+    resetGame = () => {
+        gameData.child(`game/`).update({
+            gameOver: false,
+            player1: {score: 0, turn: true, active: false},
+            player2: {score: 0, turn: false, active: false},
+            round: 1,
+          });
     }
 
     render() {
@@ -56,15 +70,30 @@ class Loser extends Component {
             text-decoration: underline;
         `;
 
+        var newGame;
+
+        if(this.state.id === 1) {
+            newGame = (
+                <Link to="/player1" onClick={this.resetGame}>
+                <LinkedWrapper>PLAY AGAIN</LinkedWrapper>
+                </Link>
+            )
+        } else {
+            newGame = (
+                <Link to="/player2" onClick={this.resetGame}>
+                <LinkedWrapper>PLAY AGAIN</LinkedWrapper>
+                </Link>
+            )
+        }
+
+        
         return (
             <Wrapper>
                 <Img alt="crying" src="https://i.imgur.com/bTf4R47.png" />
                 <Header>YOU LOST!</Header>
                 <Score>YOUR SCORE IS: {this.state.score}</Score>
                 <Score>YOUR FRIEND'S SCORE IS: {this.state.friendScore}</Score>
-                <Link to="/start">
-                    <LinkedWrapper>PLAY AGAIN</LinkedWrapper>
-                </Link>
+                {newGame}
             </Wrapper>
         )
     }
