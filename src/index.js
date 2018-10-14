@@ -4,6 +4,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Player from './Player'
 
 import Landing from './Landing';
+import Start from './Start';
+import Waiting from './Waiting';
+import Winner from './Winner';
+import Loser from './Loser';
 
 const Root = () => {
     return (
@@ -12,6 +16,11 @@ const Root = () => {
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/player1" render={() => <Player isOne={true} /> }/>
                 <Route exact path="/player2" render={() => <Player isOne={false} />} />
+  
+                <Route exact path="/start" component={Start} />
+                <Route exact path="/waiting" component={Waiting} />
+                <Route exact path="/winner" component={Winner} />
+                <Route exact path="/loser" component={Loser} />
             </Switch>
         </BrowserRouter>
     )
