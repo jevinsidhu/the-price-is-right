@@ -7,6 +7,7 @@ class Start extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            round: 1,
             clicked: false,
             bg: 0,
             // Put the actual answer here
@@ -216,7 +217,7 @@ class Start extends Component {
 
         return(
             <Wrapper>
-                <RoundCounter>ROUND 1 / 10</RoundCounter>
+                <RoundCounter>ROUND {this.state.round} / 10</RoundCounter>
                 <Countdown
                     date={this.state.clicked ? Date.now() + 2000 : Date.now() + 10000}
                     renderer={renderer}
