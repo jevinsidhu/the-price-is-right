@@ -110,7 +110,7 @@ class Start extends Component {
         const Timer = styled.p`
             opacity: ${props => this.state.clicked ? '0' : '1'};
             color: rgba(0,0,0,0.25);
-            font-size: 18px;
+            font-size: 15px;
             text-transform: uppercase;
             font-weight: 900;
             padding-bottom: 5px;
@@ -130,7 +130,7 @@ class Start extends Component {
             justify-content: center;
             align-content: center;
             justify-items: center;
-            grid-template-rows: 30px 100px 180px 200px;
+            grid-template-rows:30px 30px 100px 180px 200px;
         `;
 
         const TitleWrapper = styled.div`
@@ -207,8 +207,16 @@ class Start extends Component {
             user-select: none;
         `;
 
+        const RoundCounter = styled.p`
+            color: rgba(0,0,0,0.25);
+            font-size: 22px;
+            text-transform: uppercase;
+            font-weight: 900;
+        `;
+
         return(
             <Wrapper>
+                <RoundCounter>ROUND 1 / 10</RoundCounter>
                 <Countdown
                     date={this.state.clicked ? Date.now() + 2000 : Date.now() + 10000}
                     renderer={renderer}

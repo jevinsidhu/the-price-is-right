@@ -58,7 +58,7 @@ class Landing extends Component {
         <Img alt="Logo" src="https://i.imgur.com/UC5hkx6.png"/>
         <Header>The Price is Right</Header>
         <Description>
-          A game that pites you against your friend to guess the correct bidding price of the top trending sneakers on StockX.
+          A game that pits you against your friend to select the correct bidding price of the top trending sneakers on StockX.
           </Description>
         <Link to="/start">
           <LinkedWrapper>PLAY</LinkedWrapper>
