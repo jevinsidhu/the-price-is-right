@@ -168,8 +168,8 @@ class Start extends Component {
                 var wrongPrices = []
                 for (let index = 0; index < 3; index++) {
                     console.log(shoeNumber)
-                    var wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (200 - -200)) -200)
-                    while(wrongPrice < 0) {wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (200 - -200)) -200) }
+                    var wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (400 - -400)) -400)
+                    while(wrongPrice < 0) {wrongPrice = data.Products[shoeNumber].market.lastSale + (Math.floor(Math.random() * (400 - -400)) -400) }
                     wrongPrices.push(wrongPrice)
                 } 
                 gameData.child(`game/shoe/`).update({
@@ -236,7 +236,7 @@ class Start extends Component {
             justify-content: center;
             align-content: center;
             justify-items: center;
-            grid-template-rows:30px 30px 100px 180px 200px;
+            grid-template-rows:30px 30px 125px 180px 200px;
         `;
 
         const TitleWrapper = styled.div`
