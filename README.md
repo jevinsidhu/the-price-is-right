@@ -1,6 +1,6 @@
 # The Price is Right 👟
 
-![ScreenShot](https://i.imgur.com/mUqeZTv.png)
+![ScreenShot](https://i.imgur.com/PUqHFtu.png)
 
 A game that pits you against your friend to select the correct last sale price of the top trending sneakers on StockX.
 
