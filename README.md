@@ -10,8 +10,9 @@ Figure out which of your friends really know how much the hottest sneakers are w
 ## Installation
 1. Clone the project repository
 2. `cd` into the project directory
-3. Run `yarn start` to install all dependencies.
-4. Access project at `localhost:3000`
+3. Run `yarn` to install all dependencies.
+4. Run `yarn start`
+5. Access project at `localhost:3000`
 
 ## Dependencies
 - [React](https://facebook.github.io/react/)
